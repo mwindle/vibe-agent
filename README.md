@@ -94,14 +94,19 @@ Go ahead and ask it to list and create files and folders!
 Now that you've got a working agent, you can use it to build your own app.
 
 ### Change the agent's system prompt
-Update the system prompt path in `./src/index.ts` to point to the `project` system prompt.
+Update the system prompt path in `./src/index.ts` to point to the `project` system prompt to switch from building tools to building apps. Also, update the `setPathRestriction` call to ensure the agent only operations on files within the `./projects` folder.
 ```typescript
-const systemPrompt = fs.readFileSync("./prompts/system/project.md", "utf-8");
+setPathRestriction("./projects");
+const systemPrompt = fs.readFileSync("./prompts/system/tool.md", "utf-8");
 ```
 
 Close and re-run the agent again
 
 ### Build your app
-Now you can build whatever app you want! Try out the three-part prompts in the ./prompts/examples folder.
+Now you can build whatever app you want! Try out the `chat-app.md` prompt in the `./prompts/examples` folder:
+```text
+Follow the instructions in ./prompts/examples/chat-app.md
+```
+
 
  
