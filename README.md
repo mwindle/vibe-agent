@@ -73,12 +73,9 @@ Follow the instructions in ./prompts/user/create-folder-tool.md
 Follow the instructions in ./prompts/user/create-npm-tool.md
 ```
 
-```
-
 ### Try out the new tools
-Close and re-run the agent.
+Close (Ctrl+C) and re-run the agent.
 ```bash
-#Ctrl+C
 npm run start
 ```
 
