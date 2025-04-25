@@ -102,6 +102,6 @@ const systemPrompt = fs.readFileSync("./prompts/system/project.md", "utf-8");
 Close and re-run the agent again
 
 ### Build your app
-Now you can build whatever app you want! Try out the three-part prompts in the ./prompts/examples folder.
+Now you can build whatever app you want! Try out the three-part prompts to build an LLM chat app in the ./prompts/examples folder.
 
  

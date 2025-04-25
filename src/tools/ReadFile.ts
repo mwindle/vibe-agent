@@ -12,7 +12,6 @@ export class ReadFileTool extends Tool {
             },
         },
     };
-    public readonly cache_control: Anthropic.Messages.CacheControlEphemeral | null = null;
     public readonly name = "read_file";
     public readonly description = "Reads the contents of a file.";
 

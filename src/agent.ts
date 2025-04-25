@@ -1,17 +1,23 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+import { ContentBlockParam, MessageParam, TextBlockParam, ToolResultBlockParam, ToolUseBlock, ToolUseBlockParam } from "@anthropic-ai/sdk/resources";
 import tools from "./tools";
-import { ContentBlockParam, MessageParam, ToolResultBlockParam, ToolUseBlock, ToolUseBlockParam } from "@anthropic-ai/sdk/resources";
+import path from "path";
+import * as fs from 'fs';
+import crypto from 'node:crypto';
 import { sleep } from "./utils";
 
 export class Agent {
-    private anthropic: Anthropic;
-    private conversation: Anthropic.Messages.MessageParam[] = [];
-    private tools: Anthropic.Tool[] = Array.from(tools.values()).map(tool => tool.get());
+    private readonly anthropic: Anthropic;
+    private readonly conversationId: string;
+    private readonly conversation: Anthropic.Messages.MessageParam[] = [];
+    private readonly tools: Anthropic.Tool[] = Array.from(tools.values()).map(tool => tool.get());
 
     public constructor(private out: NodeJS.WriteStream, private readonly systemPrompt?: string) {
         this.anthropic = new Anthropic({
             apiKey: process.env.ANTHROPIC_API_KEY,
         });
+        this.conversationId = crypto.randomUUID();
+        this.out.write(`Starting conversation ${this.conversationId}\n`);
     }
 
     public async sendMessage(message: string): Promise<void> {
@@ -25,25 +31,41 @@ export class Agent {
         if (Array.isArray(prompt)) {
             this.conversation.push(...prompt);
         } else if (prompt !== undefined && prompt.trim() !== "") {
-            this.conversation.push({ role: "user", content: prompt });
+            this.conversation.push({
+                role: "user",
+                content: [{
+                    type: "text",
+                    text: prompt,
+                }]
+            });
         }
+        await this.saveConversation();
+        this.setConversationCaching();
+
         return new Promise<void>((resolve, reject) => {
             const toolResults: Promise<MessageParam>[] = [];
             const stream = this.anthropic.messages.stream({
-                system: this.systemPrompt,
+                tools: this.tools,
+                system: [
+                    {
+                        type: "text",
+                        text: this.systemPrompt || "",
+                        cache_control: { type: "ephemeral" }
+                    },
+                ],
                 messages: this.conversation,
                 model: "claude-3-7-sonnet-20250219",
                 max_tokens: 4096,
-                tools: this.tools,
             });
-            stream.on('contentBlock', (block: ContentBlockParam) => {
+            stream.on('contentBlock', async (block: ContentBlockParam) => {
                 if (block.type === 'tool_use') {
-                    this.conversation.push({ role: "assistant", content: [block] as ContentBlockParam[] });
                     this.out.write(`Calling ${block.name} with ${JSON.stringify(block.input)}\n`);
                     toolResults.push(this.callTool(block as ToolUseBlockParam));
                 } else if (block.type === 'text') {
                     this.out.write('\n');
                 }
+                this.conversation.push({ role: "assistant", content: [block] });
+                await this.saveConversation();
             });
             stream.on('text', (text: string) => {
                 this.out.write(text);
@@ -66,6 +88,9 @@ export class Agent {
                     } catch (error) {
                         reject(error);
                     }
+                } else {
+                    this.out.write(`Error: ${error}`);
+                    reject(error);
                 }
             });
             stream.on('end', async () => {
@@ -75,8 +100,6 @@ export class Agent {
                 resolve();
             });
         });
-
-
     }
 
     private async callTool(toolBlock: ToolUseBlock): Promise<MessageParam> {
@@ -100,5 +123,39 @@ export class Agent {
             content: [result]
         };
     }
+
+    private async saveConversation(): Promise<void> {
+        // Save conversation to a file named `./.conversations/${this.conversationId}.json`
+        try {
+            const dir = path.resolve('./conversations');
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir);
+            }
+            const file = path.join(dir, `${this.conversationId}.json`);
+            const options = { flag: 'w' };
+            fs.writeFileSync(file, JSON.stringify(this.conversation, null, 2), options);
+        } catch (error) {
+            console.log(`Error saving conversation: ${error}`);
+        }
+    }
+
+    private setConversationCaching(): void {
+        let last: TextBlockParam | ToolResultBlockParam | undefined;
+        for (const message of this.conversation) {
+            if (!Array.isArray(message.content)) {
+                continue;
+            }
+            for (const content of message.content) {
+                if (content.type === "text" || content.type === "tool_result") {
+                    content.cache_control = undefined;
+                    last = content;
+                }
+            }
+        }
+        if (last) {
+            last.cache_control = { type: "ephemeral" };
+        }
+    }
+
 }
 export default Agent;

@@ -22,7 +22,6 @@ export class WriteFileTool extends Tool {
             }
         },
     };
-    public readonly cache_control: Anthropic.Messages.CacheControlEphemeral | null = null;
     public readonly name = "write_file";
     public readonly description = "Writes a new file. Can optionally overwrite an existing file, but you should confirm with the user before doing that";
     public async call(input: any): Promise<string> {
