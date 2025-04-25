@@ -1,0 +1,32 @@
+{
+  "name": "vibe-agent",
+  "version": "1.0.0",
+  "description": "Build your own vibe coding agent",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node --env-file=.env dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwindle/vibe-agent.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mwindle/vibe-agent/issues"
+  },
+  "homepage": "https://github.com/mwindle/vibe-agent#readme",
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "uuid": "^11.1.0"
+  }
+}

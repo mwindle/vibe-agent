@@ -1,0 +1,1 @@
+Create a new ListFiles tool that produces a list of files and folders in the provided relative or absolute `path` (defaults to current directory).

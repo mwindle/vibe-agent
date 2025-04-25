@@ -1,0 +1,1 @@
+Create a new NpmTool that will run `npm` from the terminal with the provided `args`. It will use the `exec` function from Node's built-in `child_process` library to execute the `npm` command with the provided `args` in a shell. It must wait for the command to complete and return all of the output from the command back to the tool caller.

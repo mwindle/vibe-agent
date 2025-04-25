@@ -1,0 +1,1 @@
+The `llm-chat-app` directory has a Vite React app that lets you chat with an LLM, but the messages are not properly displaying markdown. Your task is to correctly render markdown, including `inline code` and ```<language> code blocks```. Use a popular npm library to handle the correct rendering of markdown.

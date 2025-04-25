@@ -1,0 +1,1 @@
+Create a new FileExists tool that determines whether or not a file or folder exists at the provided relative or absolute `filename` path.

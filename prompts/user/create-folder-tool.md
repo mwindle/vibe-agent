@@ -1,0 +1,1 @@
+Create a new CreateFolder tool that creates a new folder with the provided `name` at the provided `path` (defaults to current directory).
