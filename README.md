@@ -1,4 +1,7 @@
 # vibe-agent
+
+![Vibin'](./images/vibin.png)
+
 Think vibe coding apps are magic? Well, they kind of are, but they are also pretty simple at their core. Follow this guide to build your own vibe coding agent like Lovable, v0, Replit, etc. Some assembly required. 
 
 This base project includes a working agent that can interact with Anthropic's message API and two tools to get you started - ReadFile and WriteFile. With those tools and a couple of prompts, you can use the agent to build more tools and eventually start building your own apps. 
