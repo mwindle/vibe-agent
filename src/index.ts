@@ -1,6 +1,9 @@
+import dotenv from "dotenv";
 import fs from "fs";
 import { sleep, setPathRestriction } from "./utils";
 import Agent from "./agent";
+
+dotenv.config();
 
 const readline = require('node:readline').createInterface({
     input: process.stdin,

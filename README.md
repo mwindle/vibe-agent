@@ -9,12 +9,11 @@ The instructions below will walk you through:
 1. Use the agent with the provided tooling prompts to build more tools -- go ahead and try adding more!
 1. Use the agent to build your own app
 
-Before you get started, make sure you have setup your Anthropic API key. You can do this by following the instructions [here](https://docs.anthropic.com/en/api/getting-started).
+> Before you get started, make sure you have setup your Anthropic API key. You can do this by following the instructions [here](https://docs.anthropic.com/en/api/getting-started). You'll need to pay a few bucks to buy some credits to use the API -- using the claude-3.7 model isn't cheap, but it's needed for the agent to work properly. 
 
 ## Running the base agent
-There are a couple of ways to run this project -- do whatever works best for you. 
+There are a couple of ways to run this project -- do whatever works best for you. Either way, you should start by forking this project
 
-*Either way, you should start by forking this project*
 ### Option 1 (recommended): Run the agent in a GitHub Codespace
 1. Create a new Codespace from this project
 
@@ -52,21 +51,27 @@ npm run start
 Now for the fun part -- have the agent build itself into a real vibe-coding agent!
 
 ### Agent generated tools
+At the prompt, enter each of these one at a time. 
+
+**List files tool**
 ```text
-[You]: Follow the instructions in ./prompts/user/create-list-files-tool.md
-....
+Follow the instructions in ./prompts/user/create-list-files-tool.md
+```
 
-[You]: Follow the instructions in ./prompts/user/create-file-exists-tool.md
-...
+**File exists tool**
+```text
+Follow the instructions in ./prompts/user/create-file-exists-tool.md
+```
 
-[You]: Follow the instructions in ./prompts/user/create-folder-tool
-...
+**Create folder tool**
+```text
+Follow the instructions in ./prompts/user/create-folder-tool.md
+```
 
-[You]: Follow the instructions in ./prompts/user/create-file-exists-tool.md
-...
-
-[You]: Follow the instructions in ./prompts/user/create-npm-tool.md
-...
+**Run npm command tool**
+```text
+Follow the instructions in ./prompts/user/create-npm-tool.md
+```
 
 ```
 
@@ -99,4 +104,4 @@ Close and re-run the agent again
 ### Build your app
 Now you can build whatever app you want! Try out the three-part prompts in the ./prompts/examples folder.
 
-
+ 
